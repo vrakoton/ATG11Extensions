@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE mbeanInfo
+PUBLIC "-//Art Technology Group, Inc.//DTD MBean Info//EN"
+          "http://www.atg.com/dtds/management/mbeaninfo_1.0.dtd">
+<mbeanInfo type="model" className="atg.scenario.ScenarioManagerService" description="This provides facilities for monitoring the status of the scenario manager service">
+	<!-- attributes -->
+	<attributeInfos>
+		<attributeInfo name="globalServer" description="Is global server" type="boolean" readable="true" writable="false" is="false">
+			<descriptor>
+			 <fields>
+				<field name="name">globalServer</field>
+				<field name="descriptorType">attribute</field>
+				<field name="displayName">globalServer</field>
+				<field name="getMethod">isGlobalServer</field>
+			 </fields>
+		  </descriptor>
+		</attributeInfo>
+		<attributeInfo name="processEditorServer" description="Is process editor" type="boolean" readable="true" writable="false" is="false">
+			<descriptor>
+				<fields>
+					<field name="name">processEditorServer</field>
+					<field name="descriptorType">attribute</field>
+					<field name="displayName">processEditorServer</field>
+					<field name="getMethod">isProcessEditorServer</field>
+				</fields>
+		  </descriptor>
+		</attributeInfo>
+	</attributeInfos>
+	<!-- =================== -->
+	<!-- Operations					 -->
+	<!-- =================== -->
+	<operationInfos>
+		<operationInfo name="isGlobalServer" description="Tests mether the instance is a global scenario server" type="boolean" impact="action">
+			<descriptor>
+				<fields>
+				  <field name="name">isGlobalServer</field>
+					<field name="descriptorType">operation</field>
+				  <field name="role">getter</field>
+				</fields>
+			</descriptor>
+		</operationInfo>
+		<operationInfo name="isProcessEditorServer" description="Tests mether the instance is aprocess editor server" type="boolean" impact="action">
+			<descriptor>
+				<fields>
+				  <field name="name">isProcessEditorServer</field>
+					<field name="descriptorType">operation</field>
+				  <field name="role">setter</field>
+				</fields>
+			</descriptor>
+		</operationInfo>
+	</operationInfos>
+</mbeanInfo>

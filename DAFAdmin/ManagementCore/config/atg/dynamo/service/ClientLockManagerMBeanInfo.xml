@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<!DOCTYPE mbeanInfo
+PUBLIC "-//Art Technology Group, Inc.//DTD MBean Info//EN"
+          "http://www.atg.com/dtds/management/mbeaninfo_1.0.dtd">
+<mbeanInfo type="model" className="atg.service.lockmanager.ClientLockManager" description="This provides facilities for monitoring the status of the client lock manager service">
+	<!-- attributes -->
+	<attributeInfos>
+		<attributeInfo name="useLockServer" description="Use Lock Server" type="boolean" readable="true" writable="true" is="false">
+			<descriptor>
+			 <fields>
+				<field name="name">useLockServer</field>
+				<field name="descriptorType">attribute</field>
+				<field name="displayName">useLockServer</field>
+				<field name="getMethod">getUseLockServer</field>
+				<field name="setMethod">setUseLockServer</field>
+			 </fields>
+		  </descriptor>
+		</attributeInfo>
+		<attributeInfo name="timeoutLockIntervalSecs" description="Lock timeout in seconds" type="int" readable="true" writable="false" is="false">
+			<descriptor>
+				<fields>
+					<field name="name">timeoutLockIntervalSecs</field>
+					<field name="descriptorType">attribute</field>
+					<field name="displayName">timeoutLockIntervalSecs</field>
+					<field name="getMethod">getTimeoutLockIntervalSecs</field>
+				</fields>
+		  </descriptor>
+		</attributeInfo>
+		<attributeInfo name="checkForDeadlocks" description="Check for deadlocks" type="boolean" readable="true" writable="true" is="false">
+			<descriptor>
+				<fields>
+					<field name="name">checkForDeadlocks</field>
+					<field name="descriptorType">attribute</field>
+					<field name="displayName">checkForDeadlocks</field>
+					<field name="getMethod">getCheckForDeadlocks</field>
+					<field name="setMethod">setCheckForDeadlocks</field>
+				</fields>
+		  </descriptor>
+		</attributeInfo>
+		<attributeInfo name="serverSocketPort" description="Lock Server port" type="int" readable="true" writable="false" is="false">
+			<descriptor>
+				<fields>
+					<field name="name">serverSocketPort</field>
+					<field name="descriptorType">attribute</field>
+					<field name="displayName">serverSocketPort</field>
+					<field name="getMethod">getServerSocketPort</field>
+				</fields>
+		  </descriptor>
+		</attributeInfo>
+	</attributeInfos>
+	<!-- =================== -->
+	<!-- Operations					 -->
+	<!-- =================== -->
+	<operationInfos>
+		<operationInfo name="getUseLockServer" description="Gets the boolean useLockserver" type="boolean" impact="action">
+			<descriptor>
+				<fields>
+				  <field name="name">getUseLockServer</field>
+					<field name="descriptorType">operation</field>
+				  <field name="role">getter</field>
+				</fields>
+			</descriptor>
+		</operationInfo>
+		<operationInfo name="setUseLockServer" description="Sets the boolean useLockserver" type="boolean" impact="action">
+			<descriptor>
+				<fields>
+				  <field name="name">setUseLockServer</field>
+					<field name="descriptorType">operation</field>
+				  <field name="role">setter</field>
+				</fields>
+			</descriptor>
+		</operationInfo>
+		<operationInfo name="getTimeoutLockIntervalSecs" description="Gets the client timeout for a lock" type="int" impact="action">
+			<descriptor>
+				<fields>
+				  <field name="name">getTimeoutLockIntervalSecs</field>
+					<field name="descriptorType">operation</field>
+				  <field name="role">getter</field>
+				</fields>
+			</descriptor>
+		</operationInfo>
+		<operationInfo name="getCheckForDeadlocks" description="Check for deadlocks" type="boolean" impact="action">
+			<descriptor>
+				<fields>
+				  <field name="name">getCheckForDeadlocks</field>
+					<field name="descriptorType">operation</field>
+				  <field name="role">getter</field>
+				</fields>
+			</descriptor>
+		</operationInfo>
+		<operationInfo name="setCheckForDeadlocks" description="Check for deadlocks" type="boolean" impact="action">
+			<descriptor>
+				<fields>
+				  <field name="name">setCheckForDeadlocks</field>
+					<field name="descriptorType">operation</field>
+				  <field name="role">setter</field>
+				</fields>
+			</descriptor>
+		</operationInfo>
+		<operationInfo name="getServerSocketPort" description="Get the Server Lock manager port being used" type="int" impact="action">
+			<descriptor>
+				<fields>
+				  <field name="name">getServerSocketPort</field>
+					<field name="descriptorType">operation</field>
+				  <field name="role">getter</field>
+				</fields>
+			</descriptor>
+		</operationInfo>
+	</operationInfos>
+</mbeanInfo>

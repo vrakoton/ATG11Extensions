@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Standard Dynamo admin users -->
+<!-- $Id: //product/DAS/version/11.1/templates/DAS/config/config/atg/dynamo/security/admin-accounts.xml#1 $$Change: 875535 $ -->
+
+<!DOCTYPE accounts
+        PUBLIC "-//Art Technology Group, Inc.//DTD Dynamo Accounts//EN"
+        "http://www.atg.com/dtds/security/accounts_1.0.dtd">
+
+<accounts>
+ <login name="devuser">
+    <attribute name="firstName">Developer</attribute>
+    <attribute name="lastName">Test</attribute>
+    <attribute name="password">devaccess</attribute>
+    <attribute name="lastPasswordUpdate">2000-01-01 00:00:00</attribute>
+    <attribute name="passwordKeyDerivationFunction">2</attribute>
+    <member-of name="everyone-group"/>
+    <member-of name="developers-group"/>
+  </login>
+</accounts>
