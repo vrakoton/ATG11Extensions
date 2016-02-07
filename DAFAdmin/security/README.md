@@ -27,4 +27,31 @@ To reinitialize the administrator accounts, you need to :
 
 The data from the admin-accounts.xml file will be loaded automatically into the admin repository.
 
-##Configuring the security services
+##Basic Security
+
+By default, the security modules uses the **administrators-group** and the **developpers-group** groups to filter user requests.
+
+The default ATG **admin** user is part of the **administrators-group** and has all rights on all pages.
+
+The users in **developpers-group** have restricted rights:
+
+- They have the right to browse components and check the property file combinations only.
+- They can query repositories but can not change items in them.
+- All other pages are forbidden.
+
+##Configuring the Security Services
+
+The **AdminPathSecurityServlet** pipeline servlet enables you to map URL substrings with a **RequestCheckerService**.
+
+The module comes with an simple implementation of **RequestCheckerService**, **ActionRequestChecker** which has the following properties. To understand how to configure this service, take a look at the javadoc.
+
+The security module comes with two pre-configured request checker services:
+
+- The **SuperUserRequestChecker** which allows admin users only to navigate the dyn/admin pages
+- The **NucleusRequestChecker** which allows users to browse the Nucleus components with restricted rights (pretty much a read only right).
+
+##Security Audit Log
+
+Although ATG 11 has a new security audit log, our module logs detailed information on who requested what and from what IP so you can track all actions made through the dyn/admin.
+
+This file is create under the ```${DYNAMO_HOME}/servers/<your server>/logs``` folder and is called **admin.log**.
