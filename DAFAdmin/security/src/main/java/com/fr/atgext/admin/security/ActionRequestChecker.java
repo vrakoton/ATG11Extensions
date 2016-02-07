@@ -20,7 +20,7 @@ import atg.servlet.DynamoHttpServletRequest;
  * 
  * Description:
  * 
- * This class is responsible for checking all incoming requests and determine whether the current user has
+ * This class is responsible for checking incoming requests and determine whether the current user has
  * the right to call that url (POST or GET).
  * 
  * <ul>
@@ -204,6 +204,9 @@ public class ActionRequestChecker extends AbstractRequestCheckerService implemen
     }
     
     Persona[] userPersonae = user.getPersonae(getUserAuthority());
+    
+    // --- check that the user is part of the allowed groups
+    super.checkRequest(pRequest);
     
     if (userPersonae == null) {
       throw new UnauthenticatedUserException();
