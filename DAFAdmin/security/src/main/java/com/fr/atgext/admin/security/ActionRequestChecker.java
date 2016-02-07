@@ -1,4 +1,4 @@
-package com.fr.atgext.servlet.pipeline;
+package com.fr.atgext.admin.security;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -11,11 +11,8 @@ import java.util.StringTokenizer;
 import atg.core.util.StringUtils;
 import atg.nucleus.ServiceException;
 import atg.security.Persona;
-import atg.security.ThreadSecurityManager;
 import atg.security.User;
 import atg.servlet.DynamoHttpServletRequest;
-import atg.servlet.ServletUtil;
-import atg.servlet.pipeline.UserAuthorityAuthenticator;
 
 /**
  * 
@@ -49,7 +46,7 @@ import atg.servlet.pipeline.UserAuthorityAuthenticator;
  * It should be inserted in the admin dynamo pipeline
  *
  */
-public class ActionFilteringAuthenticator extends UserAuthorityAuthenticator {
+public class ActionRequestChecker extends AbstractRequestCheckerService implements RequestCheckerService {
 	final static String SEPARATOR = "|";
 	final static String VALUE_SEPARATOR = ":";
   List<String> mNoFilterExtensions;
@@ -58,7 +55,8 @@ public class ActionFilteringAuthenticator extends UserAuthorityAuthenticator {
   List <String> mIgnoredPropertyValue;
   Map<String, String> mPartialUnallowedPropertyChangeAccounts;
   
-  Map<String, Map> mDisallowedParameterValues;
+  Map<String, Map<String, List<String>>> mDisallowedParameterValues;
+  
   
   /**
    * Initialize the service at startup. We build a map of rights for the partial authorization.
@@ -106,7 +104,7 @@ public class ActionFilteringAuthenticator extends UserAuthorityAuthenticator {
 	  }
 	  
 	  if (mDisallowedParameterValues == null) {
-		  mDisallowedParameterValues = new HashMap<String, Map>();
+		  mDisallowedParameterValues = new HashMap<String, Map<String, List<String>>>();
 	  }
 	  Map <String, List<String>> groupProperties = mDisallowedParameterValues.get(pGroupName);
 	  if (groupProperties == null) {
@@ -129,20 +127,20 @@ public class ActionFilteringAuthenticator extends UserAuthorityAuthenticator {
    * @return true if the request is safe, false if it contains unallowed parameter(s)
    */
   boolean hasPartialRight (DynamoHttpServletRequest pRequest, String pAccountName) {
-	  Enumeration<String> enumeration = pRequest.getParameterNames();
+	  Enumeration<String> paramaeterNames = pRequest.getParameterNames();
 	  
-	  if (enumeration == null || mDisallowedParameterValues == null)
+	  if (paramaeterNames == null || mDisallowedParameterValues == null)
 		  return true;
 	  
-	  Map<String, List> partialRights = mDisallowedParameterValues.get(pAccountName);
+	  Map<String, List<String>> partialRights = mDisallowedParameterValues.get(pAccountName);
 	  if (partialRights == null) {
 		  return true;
 	  }
 	  
 	  String paramName = null;
 	  String paramValue = null;
-	  while(enumeration.hasMoreElements()) {
-		  paramName = enumeration.nextElement();
+	  while(paramaeterNames.hasMoreElements()) {
+		  paramName = paramaeterNames.nextElement();
 		  List<String> unAllowedValuesForProperty = partialRights.get(paramName);
 		  if (unAllowedValuesForProperty == null) {
 			  continue;
@@ -170,10 +168,9 @@ public class ActionFilteringAuthenticator extends UserAuthorityAuthenticator {
    * 	<li> static web resource requests are ignored and not filtered (css, images...)
    * </ul>
    */
-  public boolean authenticate(String pUserId, String pPassword) {
-    DynamoHttpServletRequest request = ServletUtil.getCurrentRequest();
-    if (request != null) {
-      String path = request.getPathInfo();
+  public void checkRequest(DynamoHttpServletRequest pRequest) {
+    if (pRequest != null) {
+      String path = pRequest.getPathInfo();
 
       if (getNoFilterPath() != null) {
         Iterator<String> it = getNoFilterPath().iterator();
@@ -181,7 +178,7 @@ public class ActionFilteringAuthenticator extends UserAuthorityAuthenticator {
         while (it.hasNext()) {
           excludedPath = (String) it.next();
           if (path.toUpperCase().equals(excludedPath.toUpperCase())) {
-            return true;
+            return;
           }
         }
       }
@@ -193,18 +190,26 @@ public class ActionFilteringAuthenticator extends UserAuthorityAuthenticator {
           if (path.toUpperCase().endsWith(extension.toUpperCase())) {
             if (isLoggingDebug())
               logDebug("Path ends with a static file extension, not filtering");
-            return true;
+            return;
           }
         }
       }
 
     }
-    boolean res = super.authenticate(pUserId, pPassword);
-
-    User user = ThreadSecurityManager.currentUser();
+    
+    User user = getUser(pRequest);
+    
+    if (user == null) {
+      throw new AdminActionNotAllowedException("Can not resolve user");
+    }
+    
     Persona[] userPersonae = user.getPersonae(getUserAuthority());
+    
+    if (userPersonae == null) {
+      throw new UnauthenticatedUserException();
+    }
 
-    if ((res && getUnAllowedPropertyChangeAccounts() != null && !getUnAllowedPropertyChangeAccounts()
+    if ((getUnAllowedPropertyChangeAccounts() != null && !getUnAllowedPropertyChangeAccounts()
         .isEmpty()) || (mDisallowedParameterValues != null && !mDisallowedParameterValues.isEmpty())) {
       for (int i = 0; i < userPersonae.length; i++) {
 
@@ -227,12 +232,12 @@ public class ActionFilteringAuthenticator extends UserAuthorityAuthenticator {
             if (!StringUtils.isBlank(forbiddenParameters)) {
               // --- we found that the user has some forbidden parameters, check
               // that request does not contain these parameters
-              Enumeration enumeration = request.getParameterNames();
+              Enumeration<String> parameterNames = pRequest.getParameterNames();
               String propName = null;
               String monitoredPropName = null;
-              if (enumeration != null) {
-                while (enumeration.hasMoreElements()) {
-                  propName = (String) enumeration.nextElement();
+              if (parameterNames != null) {
+                while (parameterNames.hasMoreElements()) {
+                  propName = (String) parameterNames.nextElement();
                   StringTokenizer tokenizer = new StringTokenizer(forbiddenParameters,
                       SEPARATOR);
                   while (tokenizer.hasMoreTokens()) {
@@ -242,12 +247,12 @@ public class ActionFilteringAuthenticator extends UserAuthorityAuthenticator {
                         Iterator<String> propValIt = getIgnoredPropertyValue()
                             .iterator();
                         for (String propValue : getIgnoredPropertyValue()) {
-                          if (propValue.equals(request.getParameter(propName))) {
-                            return res;
+                          if (propValue.equals(pRequest.getParameter(propName))) {
+                            return;
                           }
                         }
                       }
-                      throw new PropertyChangeNotAllowedException(
+                      throw new AdminActionNotAllowedException(
                           "You do not have the authorization level to view this page");
                     }
                   }
@@ -255,10 +260,10 @@ public class ActionFilteringAuthenticator extends UserAuthorityAuthenticator {
               }
 
               // --- manage post parameters
-              enumeration = request.getPostParameterNames();
-              if (enumeration != null) {
-                while (enumeration.hasMoreElements()) {
-                  propName = (String) enumeration.nextElement();
+              parameterNames = pRequest.getPostParameterNames();
+              if (parameterNames != null) {
+                while (parameterNames.hasMoreElements()) {
+                  propName = (String) parameterNames.nextElement();
                   StringTokenizer tokenizer = new StringTokenizer(forbiddenParameters,
                       SEPARATOR);
                   while (tokenizer.hasMoreTokens()) {
@@ -270,13 +275,13 @@ public class ActionFilteringAuthenticator extends UserAuthorityAuthenticator {
                         String propValue = null;
                         while (propValIt.hasNext()) {
                           propValue = propValIt.next();
-                          if (propValue.equals(request
+                          if (propValue.equals(pRequest
                               .getPostParameter(propName))) {
-                            return res;
+                            return;
                           }
                         }
                       }
-                      throw new PropertyChangeNotAllowedException(
+                      throw new AdminActionNotAllowedException(
                           "You do not have the authorization level to do this action");
                     }
                   }
@@ -291,15 +296,14 @@ public class ActionFilteringAuthenticator extends UserAuthorityAuthenticator {
           for (String groupName : mDisallowedParameterValues.keySet()) {
             Persona persona = getUserAuthority().getPersona(groupName);
             if (userPersonae[i].hasPersona(persona)) {
-              if (!hasPartialRight(request, groupName))
-                throw new PropertyChangeNotAllowedException(
+              if (!hasPartialRight(pRequest, groupName))
+                throw new AdminActionNotAllowedException(
                     "You do not have the authorization level to view this page");
             }
           }
         }
       }
     }
-    return res;
   }
   
   
@@ -347,5 +351,4 @@ public class ActionFilteringAuthenticator extends UserAuthorityAuthenticator {
 			Map<String, String> pPartialUnallowedPropertyChangeAccounts) {
 		mPartialUnallowedPropertyChangeAccounts = pPartialUnallowedPropertyChangeAccounts;
 	}
-	
 }

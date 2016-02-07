@@ -1,4 +1,4 @@
-package com.fr.atgext.servlet.pipeline;
+package com.fr.atgext.servlet.adminpipeline;
 
 import java.io.IOException;
 import java.util.Enumeration;
