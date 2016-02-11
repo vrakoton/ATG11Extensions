@@ -17,4 +17,13 @@
     <member-of name="everyone-group"/>
     <member-of name="developers-group"/>
   </login>
+  <login name="groupconfig">
+    <attribute name="firstName">Group config</attribute>
+    <attribute name="lastName">User</attribute>
+    <attribute name="password">${groupconfig.admin.login}</attribute>
+    <attribute name="lastPasswordUpdate">2000-01-01 00:00:00</attribute>
+    <attribute name="passwordKeyDerivationFunction">2</attribute>
+    <member-of name="everyone-group"/>
+    <member-of name="developers-group"/>
+  </login>
 </accounts>
