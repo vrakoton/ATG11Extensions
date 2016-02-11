@@ -32,10 +32,14 @@
           </configuration>
         </plugin>
       </plugins>
-    </pluginManagement> 
+    </pluginManagement>
   </build>
 
   <dependencies>
-   
+    <dependency>
+		  <groupId>com.oracle.atg</groupId>
+		  <artifactId>DAS</artifactId>
+		  <version>11.1.0</version>
+		</dependency>
   </dependencies>
 </project>
