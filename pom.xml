@@ -13,4 +13,11 @@
   <modules>
     <module>DAFAdmin</module>
   </modules>
+  <repositories>
+    <repository>
+        <id>nexus</id>
+        <name>Nexus Oracle classes repo, courtesy of RE ENTER SAS</name>
+        <url>https://nexus.re-enter.fr/content/groups/public</url>
+    </repository>
+  </repositories>
 </project>

@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-ATG-Config-Path: config
-ATG-Class-Path: classes
-ATG-Version-Full: 9.1
-ATG-Version: 9.1
-ATG-Required: DAF.Management
