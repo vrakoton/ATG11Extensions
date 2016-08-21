@@ -1,0 +1,1 @@
+java -cp ManagementCore/classes:ManagementCore/lib/jdom.jar com.fr.atgext.management.client.JMXClient -config ./atg-client-config.xml -url service:jmx:rmi://localhost/jndi/rmi://localhost:8860/atg/management/remote/JMXConnectorServer -user admin -password admin

@@ -1,0 +1,46 @@
+<jmx-client>
+<!--
+	<connection-properties>
+		<endpoint-type>DEFAULT</endpoint-type>
+	</connection-properties>
+	-->
+	<beans>
+		<bean path="java.lang:type=ClassLoading" displayName="ClassLoading" prefix="test">
+		  <property name="TotalLoadedClassCount"></property>
+		  <property name="UnloadedClassCount"></property>
+		  <property name="LoadedClassCount"></property>
+		</bean>
+		<bean path="java.lang:type=Memory" displayName="Memory">
+		  <property name="HeapMemoryUsage"></property>
+		</bean>
+		<bean path="java.lang:type=Threading" displayName="Threading">
+		  <property name="TotalStartedThreadCount"></property>
+ 		  <property name="PeakThreadCount"></property>
+ 		  <property name="ThreadCount"></property>
+		</bean>
+    <bean path="java.lang:type=GarbageCollector,name=Copy" displayName="GarbageCollectorCopy">
+      <property name="CollectionCount"></property>
+      <property name="CollectionTime"></property>
+    </bean>
+    <bean path="java.lang:type=GarbageCollector,name=MarkSweepCompact" displayName="GarbageCollectorMarkSweepCompact">
+      <property name="CollectionCount"></property>
+      <property name="CollectionTime"></property>
+    </bean>
+    <!-- memory pool -->
+    <bean path="java.lang:type=MemoryPool,name=Eden Space" displayName="EdenSpace">
+      <property name="Usage"></property>
+    </bean>
+    <bean path="java.lang:type=MemoryPool,name=Perm Gen" displayName="PermGen">
+      <property name="Usage"></property>
+    </bean>
+    <bean path="java.lang:type=MemoryPool,name=Survivor Space" displayName="Survivor">
+      <property name="Usage"></property>
+    </bean>
+    <bean path="java.lang:type=MemoryPool,name=Tenured Gen" displayName="Tenured">
+      <property name="Usage"></property>
+    </bean>
+		<!--
+		<bean path="java.lang:type=Runtime"/>
+		-->
+	</beans>
+</jmx-client>

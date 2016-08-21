@@ -1,0 +1,32 @@
+<jmx-client>
+	<connection-properties>
+		<url>service:jmx:rmi://vrakoton-laptop/jndi/rmi://vrakoton-laptop:8860/atg/management/remote/JMXConnectorServer</url>
+		<user>admin</user>
+		<password>admin</password>
+		<endpoint-type>ATG</endpoint-type>
+	</connection-properties>
+	<beans>
+		<!-- user repository -->
+		<bean path="/atg/userprofiling/ProfileAdapterRepository"/>
+		<!-- product catalog -->
+		<bean path="/atg/commerce/catalog/ProductCatalog"/>
+		<!-- order repository -->
+		<bean path="/atg/commerce/order/OrderRepository"/>
+		<!-- configuration sevice for info -->
+		<bean path="/atg/dynamo/Configuration">
+			<property name="rmiPort"></property>
+			<property name="rmiEnabled"></property>
+			<!--
+			<property name="siteHttpServerName"></property>
+			<property name="siteHttpServerPort"></property>
+			-->
+		</bean>
+		<!-- client lock manager service -->
+		<bean path="/atg/dynamo/service/ClientLockManager">
+			<property name="useLockServer"></property>
+			<property name="timeoutLockIntervalSecs"></property>
+			<property name="checkForDeadlocks"></property>
+			<property name="serverSocketPort"></property>
+		</bean>
+	</beans>
+</jmx-client>

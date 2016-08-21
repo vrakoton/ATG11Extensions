@@ -1,0 +1,37 @@
+<jmx-client>
+	<connection-properties>
+	  <!--
+		<url>jnp://localhost:1099</url>
+		<user>admin</user>
+		<password>admin</password>
+		-->
+		<endpoint-type>JBOSS</endpoint-type>
+	</connection-properties>
+	<beans>
+		<!-- JBOSS server -->
+		<bean path="jboss.system:type=Server" displayName="Server"/>
+		<bean path="jboss.jca:service=ManagedConnectionPool,name=ATGDatasource" displayName="ATGDatasource">
+			<property name="AvailableConnectionCount"/>
+			<property name="ConnectionCount"/>
+			<property name="MinSize"/>
+			<property name="MaxSize"/>
+			<property name="InUseConnectionCount"/>
+			<property name="MaxConnectionsInUseCount"/>
+		</bean>
+		<bean path="jboss.system:type=ServerInfo" displayName="ServerInfo">
+		  <property name="FreeMemory"></property>
+		  <property name="MaxMemory"></property>
+		  <property name="TotalMemory"></property>
+		  <property name="ActiveThreadCount"></property>
+		</bean>
+		<!-- to be completed with all LVM web apps -->
+		<bean path="jboss.web:host=localhost,path=/,type=Manager">
+			<property name="maxInactiveInterval"/>
+			<property name="maxActiveSessions"/>
+			<property name="sessionMaxAliveTime"/>
+			<property name="activeSessions"/>
+			<property name="maxActive"/>
+			<property name="distributable"/>
+		</bean>
+	</beans>
+</jmx-client>
