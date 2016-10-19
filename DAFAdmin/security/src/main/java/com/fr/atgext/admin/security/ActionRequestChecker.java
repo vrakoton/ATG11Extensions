@@ -127,9 +127,9 @@ public class ActionRequestChecker extends AbstractRequestCheckerService implemen
    * @return true if the request is safe, false if it contains unallowed parameter(s)
    */
   boolean hasPartialRight (DynamoHttpServletRequest pRequest, String pAccountName) {
-	  Enumeration<String> paramaeterNames = pRequest.getParameterNames();
+	  Enumeration<String> parameterNames = pRequest.getParameterNames();
 	  
-	  if (paramaeterNames == null || mDisallowedParameterValues == null)
+	  if (parameterNames == null || mDisallowedParameterValues == null)
 		  return true;
 	  
 	  Map<String, List<String>> partialRights = mDisallowedParameterValues.get(pAccountName);
@@ -139,8 +139,8 @@ public class ActionRequestChecker extends AbstractRequestCheckerService implemen
 	  
 	  String paramName = null;
 	  String paramValue = null;
-	  while(paramaeterNames.hasMoreElements()) {
-		  paramName = paramaeterNames.nextElement();
+	  while(parameterNames.hasMoreElements()) {
+		  paramName = parameterNames.nextElement();
 		  List<String> unAllowedValuesForProperty = partialRights.get(paramName);
 		  if (unAllowedValuesForProperty == null) {
 			  continue;
@@ -247,8 +247,6 @@ public class ActionRequestChecker extends AbstractRequestCheckerService implemen
                     monitoredPropName = tokenizer.nextToken();
                     if (monitoredPropName.equals(propName)) {
                       if (getIgnoredPropertyValue() != null) {
-                        Iterator<String> propValIt = getIgnoredPropertyValue()
-                            .iterator();
                         for (String propValue : getIgnoredPropertyValue()) {
                           if (propValue.equals(pRequest.getParameter(propName))) {
                             return;
