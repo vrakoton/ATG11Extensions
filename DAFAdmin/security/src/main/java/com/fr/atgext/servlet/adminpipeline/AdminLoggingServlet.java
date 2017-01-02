@@ -91,7 +91,7 @@ public class AdminLoggingServlet extends InsertableServletImpl {
 					paramValue = (pRequest.getParameter(paramName) == null) ? "null" : pRequest.getParameter(paramName) ;
 					logInfo(paramName + ":  " + paramValue);
 				}
-				logInfo ("\nEND OF PRAMETERS========\n");
+				logInfo ("\nEND OF PARAMETERS========\n");
 			} else {
 				logInfo("NO PARAMETER!\n\n");
 			}
