@@ -77,7 +77,7 @@ public class AdminLoggingServlet extends InsertableServletImpl {
 						headerValue = (pRequest.getHeader(headerName) == null) ? "null" : pRequest.getHeader(headerName) ;
 						logInfo(headerName + ":  " + headerValue);
 					}
-					logInfo ("\nEND OF HEADERS ========\n");
+					logInfo ("END OF HEADERS ========\n");
 				} else {
 					logInfo("NO HEADER!\n\n");
 				}
@@ -91,7 +91,7 @@ public class AdminLoggingServlet extends InsertableServletImpl {
 					paramValue = (pRequest.getParameter(paramName) == null) ? "null" : pRequest.getParameter(paramName) ;
 					logInfo(paramName + ":  " + paramValue);
 				}
-				logInfo ("\nEND OF PARAMETERS========\n");
+				logInfo ("END OF PARAMETERS========\n");
 			} else {
 				logInfo("NO PARAMETER!\n\n");
 			}
