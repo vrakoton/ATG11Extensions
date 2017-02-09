@@ -7,8 +7,9 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 
+import com.fr.atgext.admin.logging.LogListenerQueueUtil;
+
 import atg.core.util.StringUtils;
-import atg.nucleus.Nucleus;
 import atg.nucleus.ServiceException;
 import atg.nucleus.logging.LogListener;
 import atg.security.LoginUserAuthority;
@@ -20,39 +21,22 @@ import atg.servlet.DynamoHttpServletResponse;
 import atg.servlet.pipeline.InsertableServletImpl;
 
 public class AdminLoggingServlet extends InsertableServletImpl {
-  final static String LOGGING_QUEUE_PATH = "/atg/dynamo/security/logging/AdminLogQueue";
-  
 	boolean mAdminLogEnabled = true;
 	boolean mPrintHeaders = false;
 	List<String> mNoLogExtensions;
 	List<String> mNoLogUsers;
 	LoginUserAuthority mUserAuthority;
-	boolean mOverrideLoginQueue = true;
+	
+	boolean mOverrideLoggingQueue = true;
+	List<String> mOverrideLogListenerList;
 	
 	public void doStartService()
+	
 	  throws ServiceException
 	{
 	  super.doStartService();
-	  if (isOverrideLoginQueue()) {
-	    
-	    LogListener queue = (LogListener)Nucleus.getGlobalNucleus().resolveName(LOGGING_QUEUE_PATH);
-	    if (queue != null) {
-	      if (isLoggingInfo()) {
-	        logInfo("Overriding logging queue");
-	      }
-	      
-	      LogListener [] listeners = getLogListeners();
-	      if (listeners != null) {
-	        for (int i = listeners.length - 1; i >= 0; i--) {
-	          removeLogListener(listeners[i]);
-	        }
-	      }
-        addLogListener(queue);
-	    } else {
-	      if (isLoggingWarning()) {
-	        vlogWarning("Can not resolve {} component for log queue override", LOGGING_QUEUE_PATH);
-	      }
-	    }
+	  if (isOverrideLoginQueue() && getOverrideLogListenerList() != null) {
+	    LogListenerQueueUtil.overrideLogListeners(this, getOverrideLogListenerList());
 	  } else {
 	    if (isLoggingInfo()) {
 	      logInfo("Will let log listeners alone for now");
@@ -177,10 +161,18 @@ public class AdminLoggingServlet extends InsertableServletImpl {
 	}
 
   public boolean isOverrideLoginQueue() {
-    return mOverrideLoginQueue;
+    return mOverrideLoggingQueue;
   }
 
   public void setOverrideLoginQueue(boolean OverrideLoginQueue) {
-    this.mOverrideLoginQueue = mOverrideLoginQueue;
+    this.mOverrideLoggingQueue = OverrideLoginQueue;
+  }
+
+  public List<String> getOverrideLogListenerList() {
+    return mOverrideLogListenerList;
+  }
+
+  public void setOverrideLogListenerList(List<String> pOverrideLogListenerList) {
+    mOverrideLogListenerList = pOverrideLogListenerList;
   }
 }
